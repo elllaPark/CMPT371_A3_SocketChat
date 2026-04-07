@@ -9,7 +9,7 @@ A simple TCP-based multi-client chat application built in Python using socket pr
 | Name | Student ID | Email |
 | --- | --- | --- |
 | Sinhee Park | 301608438 | spa250@sfu.ca |
-| Khalid Karim | 301581950 | UPDATE_EMAIL_HERE |
+| Khalid Karim | 301581950 | kka164@sfu.ca |
 ## 1. Project Overview
 This project is a real-time chat application that uses a client-server architecture over TCP.
 - `server.py` accepts multiple clients, manages usernames, and routes messages.
