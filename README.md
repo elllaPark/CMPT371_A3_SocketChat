@@ -11,10 +11,10 @@ A simple TCP-based multi-client chat application built in Python using socket pr
 
 ## Group Members
 
-| Name         | Student ID | Email             |
-| ------------ | ---------- | ----------------- |
-| Sinhee Park  | 301608438  | spa250@sfu.ca     |
-| Khalid Karim | 301581950  | UPDATE_EMAIL_HERE |
+| Name         | Student ID | Email         |
+| ------------ | ---------- | ------------- |
+| Sinhee Park  | 301608438  | spa250@sfu.ca |
+| Khalid Karim | 301581950  | kka164@sfu.ca |
 
 ## 1. Project Overview
 
