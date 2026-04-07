@@ -1,101 +1,166 @@
-# **CMPT371 A3 Socket Programming `SocketChat`**
-**Course:** CMPT 371 - Data Communications & Networking  
-**Instructor:** Mirza Zaeem Baig  
-**Semester:** Spring 2026
-## **Group Members**
-| Name | Student ID | Email |
-|:----------:|:----------:|:----------:|
-| Sinhee Park | 301608438 | spa250@sfu.ca |
-| Khalid Karim | 301581950 |  |
-## **1\. Project Overview & Description**
+# CMPT371 A3 SocketChat
 
-## **2\. System Limitations & Edge Cases** 
-As required by the project specifications, we have identified and handled (or defined) the following limitations and potential issues within our application scope:
+A simple TCP-based multi-client chat application built in Python using socket programming.
 
-* **Handling Multiple Clients Concurrently:** 
-  * <span style="color: green;">*Solution:*</span> We utilized Python's threading module. When two clients connect, they are popped from the matchmaking\_queue and assigned to an isolated game\_session daemon thread. This ensures concurrent games do not block the main server event listener.  
-  * <span style="color: red;">*Limitation:*</span> Thread creation is limited by system resources. An enterprise application would eventually need a thread pool or asynchronous I/O (like asyncio) to handle tens of thousands of connections.  
-* **TCP Stream Buffering:** 
-  * <span style="color: green;">*Solution:*</span> TCP is a continuous byte stream, meaning multiple JSON messages can be mashed together if sent rapidly. We implemented an application-layer fix by appending a newline \\n to all JSON payloads and splitting the buffer on the client/server side to process them atomically.  
-* **Input Validation & Security:** 
-  * <span style="color: red;">*Limitation:*</span> The client side uses a basic try/except ValueError to prevent crashes from bad user input (like typing letters instead of numbers). However, malicious users could still theoretically modify the client script to send invalid coordinates. Our server assumes well-formatted JSON integers in this basic implementation.
+## Course Information
 
-## **3\. Video Demo**
+- Course: CMPT 371 - Data Communications and Networking
+- Assignment: Assignment 3 - Socket Programming Project
+- Semester: Spring 2026
+- Instructor: Mirza Zaeem Baig
 
-<span style="color: purple;">***RUBRIC NOTE: Include a clickable link.***</span>  
-Our 2-minute video demonstration covering connection establishment, data exchange, real-time gameplay, and process termination can be viewed below:  
-[**▶️ Watch Project Demo on YouTube**](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
+## Group Members
 
-## **4\. Prerequisites (Fresh Environment)**
+| Name         | Student ID | Email             |
+| ------------ | ---------- | ----------------- |
+| Sinhee Park  | 301608438  | spa250@sfu.ca     |
+| Khalid Karim | 301581950  | UPDATE_EMAIL_HERE |
 
-To run this project, you need:
+## 1. Project Overview
 
-* **Python 3.10** or higher.  
-* No external pip installations are required (uses standard socket, threading, json, sys libraries).  
-* (Optional) VS Code or Terminal.
+This project is a real-time chat application that uses a client-server architecture over TCP.
 
-<span style="color: purple;">***RUBRIC NOTE: No external libraries are required. Therefore, a requirements.txt file is not strictly necessary for dependency installation, though one might be included for environment completeness.***</span>
+- `server.py` accepts multiple clients, manages usernames, and routes messages.
+- `client.py` handles the client socket connection and message receiving.
+- `gui_client.py` provides the Tkinter GUI for login, chat, private messaging, and the online users list.
+  Main supported features:
+- multiple clients connected at the same time
+- unique username login
+- public chat messages
+- private messages with `/msg`
+- online users sidebar
+- instant online user list on login
+- join and leave notifications
+- `/list` and `/quit` commands
+- emoji picker in the GUI
 
-## **4\. Step-by-Step Run Guide**
+## 2. Limitations and Edge Cases
 
-<span style="color: purple;">***RUBRIC NOTE: The grader must be able to copy-paste these commands.***</span>
+- The server uses one thread per client. This is fine for a class project, but not ideal for very large-scale systems.
+- Chat history is not saved permanently. If the server closes, the current session is lost.
+- There is no password or account system. Users are identified only by unique usernames.
+- Messages are not encrypted. This project is for socket programming practice, not secure communication.
+- The easiest setup is local testing using `127.0.0.1`. Remote use requires correct IP and firewall settings.
+- The protocol is simple text over TCP, which is easy to debug but less robust than a production protocol.
+- The server validates usernames and basic command format, but it is not designed for malicious traffic.
 
+## 3. Prerequisites
 
-### **Step 1: Start the Server**
+- Python 3.10 or newer
+- Tkinter available in your Python installation
+  No third-party packages are required. This project uses only Python standard library modules.
 
-Open your terminal and navigate to the project folder. The server binds to 127.0.0.1 on port 5050\.  
+## 4. Step-by-Step Run Guide
+
+Open a terminal in the project folder.
+
+### Step 1: Start the server
+
 ```bash
-python server.py  
-# Console output: "[STARTING] Server is listening on 127.0.0.1:5050"
+python server.py
 ```
 
-### **Step 2: Connect Player 1 (X)**
+Default server settings:
 
-Open a **new** terminal window (keep the server running). Run the client script to start the first client.  
+- Host: `0.0.0.0`
+- Port: `9090`
+
+### Step 2: Start the first client
+
+Open a new terminal and run:
+
 ```bash
-python client.py  
-# Console output: "Connected. Waiting for opponent..."
+python gui_client.py
 ```
 
-### **Step 3: Connect Player 2 (O)**
+Then enter:
 
-Open a **third** terminal window. Run the client script again to start the second client.  
+- Host: `127.0.0.1`
+- Port: `9090`
+- Username: for example `Khalid`
+
+### Step 3: Start more clients
+
+Open additional terminals and run:
+
 ```bash
-python client.py  
-# Console output: "Connected. Waiting for opponent..."
-# Console output: "Match found! You are Player O."
+python gui_client.py
 ```
 
-### **Step 4: Gameplay**
+Use different usernames such as:
 
-1. **Player X** will be prompted: Enter row and col (e.g., '1 1'):.  
-2. Type two numbers separated by a space (from 0 to 2\) and press Enter.  
-3. The server updates the board on both screens.  
-4. **Player O** takes their turn.  
-5. The connection naturally terminates when a win/draw is achieved.
+- `Ace`
+- `Julia`
 
-## **5\. Technical Protocol Details (JSON over TCP)**
+### Step 4: Test chat features
 
-We designed a custom application-layer protocol for data exchange usin JSON over TCP:
+- Send a normal message and confirm all connected users receive it.
+- Send a private message using:
 
-* **Message Format:** `{"type": <string>, "payload": <data>}`  
-* **Handshake Phase:** \* Client sends: `{"type": "CONNECT"}`  
-  * Server responds: `{"type": "WELCOME", "payload": "Player X"}`  
-* **Gameplay Phase:**  
-  * Client sends: `{"type": "MOVE", "row": 1, "col": 1}`  
-  * Server broadcasts: `{"type": "UPDATE", "board": [[...], [...], [...]], , "turn": "O", "status": "ongoing"}`
+```text
+/msg Ace hello
+```
 
+- Show the online user list using:
 
-## **6\. Academic Integrity & References**
+```text
+/list
+```
 
-<span style="color: purple;">***RUBRIC NOTE: List all references used and help you got. Below is an example.***</span>
+- Disconnect using:
 
-* **Code Origin:**  
-  * The socket boilerplate was adapted from the course tutorial "TCP Echo Server". The core multithreaded game logic, protocol, and state management were written by the group.  
-* **GenAI Usage:**  
-  * ChatGPT was used to assist in generating the Unicode box-drawing characters for the CLI interface, and to help structure the TCP buffer-splitting logic (`\n delimiter`).  
-  * Gemini was used to help in `README.md` writing and polishing.  
-  * GitHub Copilot was used to help plan the workflow of the application.   
-* **References:**  
-  * [Python Socket Programming HOWTO](https://docs.python.org/3/howto/sockets.html)  
-  * [Real Python: Intro to Python Threading](https://realpython.com/intro-to-python-threading/)
+```text
+/quit
+```
+
+## 5. Optional CLI Client
+
+You can also run the terminal client for quick testing:
+
+```bash
+python client.py --host 127.0.0.1 --port 9090
+```
+
+## 6. Protocol Summary
+
+Handshake messages:
+
+- `USERNAME_REQUEST`
+- `USERNAME_OK`
+- `USERNAME_TAKEN`
+- `USERNAME_INVALID`
+  Chat/event messages:
+- `MSG|sender|text|timestamp`
+- `SYSTEM|text|timestamp`
+- `PRIVATE|from|text|timestamp`
+- `PRIVATE_SENT|to|text|timestamp`
+- `USERLIST|username|timestamp`
+
+## 7. Suggested Demo Flow
+
+1. Start the server.
+2. Connect `Khalid`.
+3. Connect `Ace`.
+4. Show that users appear instantly in the online list.
+5. Connect `Julia`.
+6. Send a public message.
+7. Send a private message with `/msg`.
+8. Use `/list`.
+9. Use `/quit` and show the online list updates.
+
+## 8. Video Demo
+
+- Demo link: `PASTE_VIDEO_LINK_HERE`
+
+## 9. Academic Integrity and References
+
+### GenAI Usage
+
+- OpenAI ChatGPT/Codex was used for debugging help, small code fixes, and README polishing.
+
+### References
+
+- Python Socket Programming HOWTO: https://docs.python.org/3/howto/sockets.html
+- Python `socket` documentation: https://docs.python.org/3/library/socket.html
+- Python `threading` documentation: https://docs.python.org/3/library/threading.html
+- Python `tkinter` documentation: https://docs.python.org/3/library/tkinter.html

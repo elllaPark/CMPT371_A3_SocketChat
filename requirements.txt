@@ -1,0 +1,14 @@
+# CMPT 371 A3 – Chat Application Dependencies
+# ──────────────────────────────────────────────
+# The chat application uses only Python standard library modules:
+#   socket, threading, argparse, tkinter, re, datetime, sys
+#
+# No third-party packages are required.
+#
+# Tkinter is bundled with most Python installations.
+# If it's missing on Linux, install it with:
+#   sudo apt-get install python3-tk          # Debian / Ubuntu
+#   sudo dnf install python3-tkinter         # Fedora
+#   brew install python-tk                   # macOS (via Homebrew)
+#
+# Python version: 3.10 or newer (uses match-less union types)
