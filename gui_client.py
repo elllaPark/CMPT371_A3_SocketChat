@@ -221,6 +221,7 @@ class LoginScreen(tk.Toplevel):
         self.resizable(False, False)
         self.configure(bg=P["bg_login"])
         self.grab_set()
+        self.protocol("WM_DELETE_WINDOW", master.destroy)
         self._build()
         self._centre()
 
@@ -341,6 +342,7 @@ class ChatWindow(tk.Tk):
 
     def __init__(self):
         super().__init__()
+        self.withdraw()
         self.title("Nexus Chat")
         self.configure(bg=P["bg_root"])
         self.geometry("1100x720")
@@ -829,6 +831,9 @@ class ChatWindow(tk.Tk):
 
     def _open_chat(self, login_win):
         login_win.destroy()
+        self.deiconify()
+        self.lift()
+        
         self._conn_dot.config(fg=P["fg_online"])
         self._conn_lbl.config(text=f"online  ·  {self._username}", fg=P["fg_main"])
         self._input_entry.config(state="normal")
