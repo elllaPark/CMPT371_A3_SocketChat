@@ -150,7 +150,7 @@ Handshake messages:
 
 ## 8. Video Demo
 
-- Demo link: `PASTE_VIDEO_LINK_HERE`
+- Demo link: https://youtu.be/lZaWy4VLZ4w
 
 ## 9. Academic Integrity and References
 
