@@ -105,7 +105,7 @@ Chat/event messages:
 8. Use `/list`.
 9. Use `/quit` and show the online list updates.
 ## 8. Video Demo
-- Demo link: `PASTE_VIDEO_LINK_HERE`
+- Demo link: https://youtu.be/lZaWy4VLZ4w
 ## 9. Academic Integrity and References
 ### GenAI Usage
 - OpenAI ChatGPT/Codex was used for debugging help, small code fixes, and README polishing.
